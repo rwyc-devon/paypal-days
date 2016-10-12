@@ -1,6 +1,6 @@
 #paypal-days
 
-simple parser that takes a PayPal history file and turns it into a list of
+A simple parser that takes a PayPal history file and turns it into a list of
 daily totals.
 
 ##Requirements
