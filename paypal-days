@@ -4,30 +4,30 @@ import sys
 from datetime import *
 from decimal import *
 def getPaypalDays(filename):
-	with open(filename, "rb") as file:
-		reader=csv.DictReader(file, delimiter=",", quotechar="\"")
-		days={}
-		for row in reader:
-			row={key.lower().strip():val for (key,val) in row.items()}
-			date=datetime.strptime(row["date"], "%d/%m/%Y")
-			key=date.strftime("%Y-%m-%d")
-			gross=Decimal(row["gross"])
-			if(not key in days):
-				days[key]={"total": Decimal(0), "date": date}
-			days[key]["total"]+=gross
-		return days
+    with open(filename, "rb") as file:
+        reader=csv.DictReader(file, delimiter=",", quotechar="\"")
+        days={}
+        for row in reader:
+            row={key.lower().strip():val for (key,val) in row.items()}
+            date=datetime.strptime(row["date"], "%d/%m/%Y")
+            key=date.strftime("%Y-%m-%d")
+            gross=Decimal(row["gross"])
+            if(not key in days):
+                days[key]={"total": Decimal(0), "date": date}
+            days[key]["total"]+=gross
+        return days
 
 def blank(days, start):
-	day=start
-	for n in xrange(0, days):
-		print('{0},'.format(day.strftime("%Y-%m-%d")))
-		day = day+timedelta(1)
+    day=start
+    for n in xrange(0, days):
+        print('{0},'.format(day.strftime("%Y-%m-%d")))
+        day = day+timedelta(1)
 
 days=sorted(getPaypalDays(sys.argv[1]).items())
 prev=days[0][1]["date"]
 prev=datetime(prev.year, prev.month, 1)
 blank(1, prev)
 for date, item in days:
-	blank((item["date"]-prev).days-1, prev+timedelta(1))
-	print("{0}, {1}".format(date, item["total"]))
-	prev=item["date"]
+    blank((item["date"]-prev).days-1, prev+timedelta(1))
+    print("{0}, {1}".format(date, item["total"]))
+    prev=item["date"]
