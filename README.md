@@ -14,5 +14,7 @@ daily totals.
   if I request more than a few months at a time, which is pretty annoying
 - For "File Types for Download", choose "Comma Delimited - Completed Payments"
 - Download the file
+- Before running the script for the first time, copy `config.example.py` to
+  `config.py` and edit it according to the instructions within
 - Run `paypal-days <name-of-file>`
 	- To save the output, try `paypal-days <name-of-file> > out.csv`
