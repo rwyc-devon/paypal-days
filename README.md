@@ -12,7 +12,7 @@ daily totals.
 - In PayPal, navigate to My Account > History > Download History
 - Enter your date range. I find that I get errors (gateway timeout) from PayPal
   if I request more than a few months at a time, which is pretty annoying
-- For "File Types for Download", choose "Comma Delimited - Completed Payments"
+- For "File Types for Download", choose "Comma Delimited - All Activity"
 - Download the file
 - Before running the script for the first time, copy `config.example.py` to
   `config.py` and edit it according to the instructions within
