@@ -3,18 +3,37 @@ import csv
 import sys
 from datetime import *
 from decimal import *
+import config
+types=config.types
+excludeNames=config.excludeNames
+names=set()
 def getPaypalDays(filename):
     with open(filename, "rb") as file:
         reader=csv.DictReader(file, delimiter=",", quotechar="\"")
         days={}
         for row in reader:
-            row={key.lower().strip():val for (key,val) in row.items()}
-            date=datetime.strptime(row["date"], "%d/%m/%Y")
-            key=date.strftime("%Y-%m-%d")
-            gross=Decimal(row["gross"])
-            if(not key in days):
-                days[key]={"total": Decimal(0), "date": date}
-            days[key]["total"]+=gross
+            row={
+                    key.lower().strip():
+                        val.decode("iso-8859-1").encode("utf8")
+                    for
+                        (key,val)
+                    in
+                        row.items()
+                    }
+            if(row["type"]=="Payment Sent"):
+                names.add(row["name"])
+            if((row["type"] in types) and (row["name"] not in excludeNames)):
+                date=datetime.strptime(row["date"], "%d/%m/%Y")
+                key=date.strftime("%Y-%m-%d")
+                gross=Decimal(row["gross"])
+                if(not key in days):
+                    days[key]={"total": Decimal(0), "parts": [], "date": date}
+                days[key]["total"]+=gross
+                days[key]["parts"].append('{0}: {1} (${2})'.format(
+                    row["type"],
+                    row["name"],
+                    str(gross)
+                    ))
         return days
 
 def blank(days, start):
@@ -24,10 +43,15 @@ def blank(days, start):
         day = day+timedelta(1)
 
 days=sorted(getPaypalDays(sys.argv[1]).items())
-prev=days[0][1]["date"]
-prev=datetime(prev.year, prev.month, 1)
-blank(1, prev)
-for date, item in days:
-    blank((item["date"]-prev).days-1, prev+timedelta(1))
-    print("{0}, {1}".format(date, item["total"]))
-    prev=item["date"]
+def printDays(days):
+    prev=days[0][1]["date"]
+    prev=date(prev.year, prev.month, 1)
+    blank(1, prev)
+    for d, item in days:
+        blank((item["date"].date()-prev).days-1, prev+timedelta(1))
+        print("{0}, {1}, {2}".format(d, item["total"], ", ".join(item["parts"])))
+        prev=item["date"].date()
+if(len(sys.argv) > 2 and sys.argv[2] == "names"):
+    print("\"" + ('",\n"'.join(names)) + "\"")
+else:
+    printDays(days)
