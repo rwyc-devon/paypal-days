@@ -25,7 +25,7 @@ def getPaypalDays(filename):
             if((row["type"] in types) and (row["name"] not in excludeNames)):
                 date=datetime.strptime(row["date"], "%d/%m/%Y")
                 key=date.strftime("%Y-%m-%d")
-                gross=Decimal(row["gross"])
+                gross=Decimal(row["gross"].replace(",", ""))
                 if(not key in days):
                     days[key]={"total": Decimal(0), "parts": [], "date": date}
                 days[key]["total"]+=gross
