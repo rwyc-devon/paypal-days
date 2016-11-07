@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python2
 import csv
 import sys
 from datetime import *
@@ -8,7 +8,7 @@ types=config.types
 excludeNames=config.excludeNames
 names=set()
 def getPaypalDays(filename):
-    with open(filename, "rb") as file:
+    with open(filename, "r") as file:
         reader=csv.DictReader(file, delimiter=",", quotechar="\"")
         days={}
         for row in reader:
@@ -20,7 +20,7 @@ def getPaypalDays(filename):
                     in
                         row.items()
                     }
-            if(row["type"]=="Payment Sent"):
+            if(row["type"] in ["Payment Sent", "Payment For"]):
                 names.add(row["name"])
             if((row["type"] in types) and (row["name"] not in excludeNames)):
                 date=datetime.strptime(row["date"], "%d/%m/%Y")
