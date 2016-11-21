@@ -5,7 +5,7 @@ daily totals.
 
 ##Requirements
 
-- Python2.7+ (probably 3.x as well, not tested)
+- Python3
 
 ##Usage
 
@@ -18,3 +18,6 @@ daily totals.
   `config.py` and edit it according to the instructions within
 - Run `paypal-days <name-of-file>`
 	- To save the output, try `paypal-days <name-of-file> > out.csv`
+
+If you want to just see donations, add run `paypal-days <name-of-file>
+donations`

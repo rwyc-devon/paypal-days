@@ -19,6 +19,8 @@ types=[
         "Website Payments Pro API Solution",
         "Refund",
         "Payment Sent",
+        "Update to eCheck Sent",
+        "Donation Received",
         ]
 """
 If you sometimes send manual payments to refund customers, you will need to
