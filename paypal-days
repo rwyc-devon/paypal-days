@@ -7,7 +7,7 @@ import config
 types=config.types
 excludeNames=config.excludeNames
 names=set()
-def getPaypalDays(filename):
+def getPaypalDays(filename, types):
     with open(filename, "r") as file:
         reader=csv.DictReader(file, delimiter=",", quotechar="\"")
         days={}
@@ -34,7 +34,7 @@ def getPaypalDays(filename):
                     row["name"],
                     str(gross)
                     ))
-        return days
+        return sorted(days.items())
 
 def blank(days, start):
     day=start
@@ -42,7 +42,7 @@ def blank(days, start):
         print('{0},'.format(day.strftime("%Y-%m-%d")))
         day = day+timedelta(1)
 
-days=sorted(getPaypalDays(sys.argv[1]).items())
+filename=sys.argv[1]
 def printDays(days):
     prev=days[0][1]["date"]
     prev=date(prev.year, prev.month, 1)
@@ -52,6 +52,11 @@ def printDays(days):
         print("{0}, {1}, {2}".format(d, item["total"], ", ".join(item["parts"])))
         prev=item["date"].date()
 if(len(sys.argv) > 2 and sys.argv[2] == "names"):
+    days=getPaypalDays(filename, types)
     print("\"" + ('",\n"'.join(names)) + "\"")
+if(len(sys.argv) > 2 and sys.argv[2] == "donations"):
+    days=getPaypalDays(filename, "Donation Received")
+    printDays(days)
 else:
+    days=getPaypalDays(filename, types)
     printDays(days)
